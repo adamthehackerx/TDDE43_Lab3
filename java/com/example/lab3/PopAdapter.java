@@ -1,28 +1,39 @@
 package com.example.lab3;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
 public class PopAdapter extends ArrayAdapter<String> {
 
-    private Context context;
-    private ArrayList<String> arrayList = new ArrayList<>();
+    Context context;
+    ArrayList<String> names;
 
 
-    public PopAdapter(@NonNull Context context, ArrayList<String> arrayList) {
-        super(context, 0, arrayList);
+    public PopAdapter(@NonNull Context context, ArrayList<String> names) {
+        super(context, 0, names);
         this.context = context;
-        this.arrayList = arrayList;
+        this.names = names;
     }
+    @NonNull
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup){
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         System.out.println("INSIDE");
-        return new ListPopupWindow(context, arrayList.get(position));
+        View listItem = convertView;
+        if(listItem == null)
+            listItem = LayoutInflater.from(context).inflate(R.layout.activity_main ,parent,false);
+        return new ListPopupWindow(context, (String) names.get(position));
+    }
+
+    public void updatePop(ArrayList<String> names) {
+        this.names = names;
+        notifyDataSetChanged();
     }
 }

@@ -20,30 +20,20 @@ public class ListPopupWindow extends View {
         this.result = result;
     }
 
-    public ListPopupWindow(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int w = MeasureSpec.getSize(widthMeasureSpec);
+        setMeasuredDimension(w, 80);
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
+        System.out.println("onDraw" + result);
         super.onDraw(canvas);
         paint.setColor(Color.BLUE);
         paint.setTextSize(40f);
-
         canvas.drawText(result, 0, paint.getTextSize(), paint);
     }
 
-    @Override
-    protected void onMeasure(int width, int height){
-        setMeasuredDimension(width, height);
-    }
-
-    public ListPopupWindow(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public ListPopupWindow(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
 }
