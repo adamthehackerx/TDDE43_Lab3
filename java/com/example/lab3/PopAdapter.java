@@ -31,9 +31,4 @@ public class PopAdapter extends ArrayAdapter<String> {
             listItem = LayoutInflater.from(context).inflate(R.layout.activity_main ,parent,false);
         return new ListPopupWindow(context, (String) names.get(position));
     }
-
-    public void updatePop(ArrayList<String> names) {
-        this.names = names;
-        notifyDataSetChanged();
-    }
 }

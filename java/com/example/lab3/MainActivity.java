@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
@@ -49,9 +51,24 @@ public class MainActivity extends AppCompatActivity {
                     if(Looper.myLooper() == Looper.getMainLooper());{
                         System.out.print("Looper.myLooper() == Looper.getMainLooper() true");
                     }
-                }
+                }   else listPopupWindow.dismiss();
             }
         });
+
+        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                input.setText(potMatches.get(position));
+                setArrayAdapterListPopUp();
+            }
+        });
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus) {
+            listPopupWindow.setHeight(650);
+        }
     }
 
     private void preSearch(EditText toSearch) {
@@ -75,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         id++;
-        System.out.println("t.start();");
         t.start();
         if(Looper.myLooper() == Looper.getMainLooper());{
             System.out.print("Looper.myLooper() == Looper.getMainLooper() true");
@@ -94,43 +110,29 @@ public class MainActivity extends AppCompatActivity {
         if( Looper.myLooper() == Looper.getMainLooper());{
             System.out.print("Looper.myLooper() == Looper.getMainLooper() json parse true");
         }
-
-        System.out.println(data);
-
         JSONObject jsonObject = new JSONObject("{ " + data);
         JSONObject jsonObject1 = new JSONObject("{ " + data);
-
         JSONArray resultJSON = jsonObject.getJSONArray("result");
-
         String jsonID = jsonObject1.getString("id");
-        System.out.println(jsonID);
-
         if(Integer.parseInt(jsonID) != id){
             return;
         }
-
         for (int k = 0; k < resultJSON.length(); k++) {
             potMatches.add(resultJSON.get(k).toString());
-
-            System.out.println("hallå " + potMatches.get(k));
-
-
         }
         setPotMatches(potMatches);
     }
 
     public void setArrayAdapterListPopUp() {
-        popAdapter.updatePop(potMatches);
-        listPopupWindow.show();
+        if(!potMatches.isEmpty()) {
+            popAdapter.notifyDataSetChanged();
+            listPopupWindow.show();
+        } else listPopupWindow.dismiss();
     }
 
     public String getData (String URLToSearch) throws JSONException {
         String result = "";
-        JSONObject jsonObject = null;
         System.out.println("urlto search" + URLToSearch);
-
-        id = id;
-
         try {
             URL url = new URL(URLToSearch);
             System.out.println("url" +url);
@@ -140,21 +142,10 @@ public class MainActivity extends AppCompatActivity {
             System.out.print( reader.readLine());
             while ((line = reader.readLine()) != null) {
                 result += line;
-                //  System.out.println("inne i while- loopen" + line);
             }
-
-
         } catch (IOException e) {
-            System.out.println("problem med att öppna streamen");
-
             e.printStackTrace();
-
         }
-
-        System.out.println( result);
-
-
-
         return result;
     }
 
